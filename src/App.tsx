@@ -5,6 +5,7 @@ import {connect, ConnectedProps} from "react-redux";
 import {AppStateType} from "./store/store";
 import {deleteComment, deletePost, editComment, editPost, loadPosts, newComment, newPost} from "./store/reducer";
 import {PostType} from "./store/types";
+import UniquePost from "./components/Post/UniquePost";
 
 const mapStateToProps = (state: AppStateType) => ({
         ...state
@@ -51,7 +52,7 @@ function App(props: AppProps) {
             )}/>
 
             <Route path="/posts/:id?" render={() => (
-                <></>
+                <UniquePost {...props} />
             )}/>
 
             <Route exact path="/" render={() =>
