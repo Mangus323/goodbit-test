@@ -1,0 +1,23 @@
+.comments {
+    width: 100%;
+    border-top: 1px solid #d9d9d9;
+    padding: 5px;
+}
+
+.comment {
+    display: flex;
+    flex-direction: row;
+
+}
+
+.buttons {
+    margin-left: auto
+}
+
+.buttons * {
+    border: none;
+    font-size: 12px;
+    margin: 1px;
+    height: 20px;
+    border-radius: 10px;
+}

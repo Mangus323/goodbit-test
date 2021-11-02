@@ -28,7 +28,8 @@ type ActionLoadData = {
 }
 type ActionNewPost = {
     type: typeof NEW_POST,
-    post: PostType
+    title: string,
+    body: string
 }
 type ActionDeletePost = {
     type: typeof DELETE_POST,
@@ -80,23 +81,23 @@ export const reducer = (state = initialState, action: Actions): StateType => {
         case NEW_POST:
             return {
                 comments: state.comments,
-                posts: [...state.posts, action.post],
+                posts: [...state.posts, {id: getLastPostId(state.posts) + 1, title: action.title, body: action.body}],
                 loaded: state.loaded,
             }
         case DELETE_POST:
             return {
                 comments: state.comments,
-                posts: editPost(state.posts, action.id),
+                posts: editPosts(state.posts, action.id),
                 loaded: state.loaded,
             }
         case EDIT_POST:
             return {
                 comments: state.comments,
-                posts: editPost(state.posts, action.id, action.post),
+                posts: editPosts(state.posts, action.id, action.post),
                 loaded: state.loaded,
             }
         case NEW_COMMENT:
-            let lastId = getLastId(state.comments, action.postId)
+            let lastId = getLastCommentId(state.comments, action.postId)
             return {
                 comments: [...state.comments, {id: lastId + 1, postId: action.postId, text: action.text}],
                 posts: state.posts,
@@ -104,13 +105,13 @@ export const reducer = (state = initialState, action: Actions): StateType => {
             }
         case DELETE_COMMENT:
             return {
-                comments: editComment(state.comments, action.postId, action.id),
+                comments: editComments(state.comments, action.postId, action.id),
                 posts: state.posts,
                 loaded: state.loaded
             }
         case EDIT_COMMENT:
             return {
-                comments: editComment(state.comments, action.postId, action.id, action.text),
+                comments: editComments(state.comments, action.postId, action.id, action.text),
                 posts: state.posts,
                 loaded: state.loaded
             }
@@ -119,8 +120,16 @@ export const reducer = (state = initialState, action: Actions): StateType => {
     }
 };
 
+//Возвращает последний id поста, если их нет то -1 (должен обрабатываться на сервере)
+function getLastPostId(posts: Array<PostType>): number {
+    if (posts.length > 0)
+        return posts[posts.length - 1].id
+    else
+        return -1
+}
+
 //Возвращает последний id коммента у поста (должен обрабатываться на сервере)
-function getLastId(comments: Array<CommentType>, postId: number): number {
+function getLastCommentId(comments: Array<CommentType>, postId: number): number {
     let max = 0
     comments.forEach((item) => {
         if (item.postId === postId && max < item.id) max = item.id
@@ -129,16 +138,15 @@ function getLastId(comments: Array<CommentType>, postId: number): number {
 }
 
 // Возвращает новый массив, заменяя пост с id на newPost
-function editPost(posts: Array<PostType>, id: number, newPost?: PostType): Array<PostType> {
+function editPosts(posts: Array<PostType>, id: number, newPost?: PostType): Array<PostType> {
     let newArray = [...posts]
     let index = posts.findIndex(post => post.id === id) // индекс в массиве для нужного id
-
     newPost ? newArray.splice(index, 1, newPost) : newArray.splice(index, 1)
     return newArray
 }
 
 // Возвращает новый массив, заменяя комментарий с id на newComment
-function editComment(comments: Array<CommentType>, postId: number, id: number, text?: string): Array<CommentType> {
+function editComments(comments: Array<CommentType>, postId: number, id: number, text?: string): Array<CommentType> {
     let newArray = [...comments]
     let index = comments.findIndex(comment => comment.id === id && comment.postId === postId) // индекс в массиве для нужного id
 
@@ -169,7 +177,6 @@ export const loadPosts = () => (
         data.forEach((item) => {
             posts.push({body: item.body, id: item.id, title: item.title})
             item.comments.forEach((comment) => {
-                console.log(item)
                 comments.push({id: comment.id, postId: item.id, text: comment.text})
             })
         })
@@ -177,4 +184,47 @@ export const loadPosts = () => (
     }
 )
 
+export const newPost = (title: string, body: string): ActionNewPost => {
+    return {
+        type: NEW_POST,
+        title,
+        body
+    }
+}
+export const deletePost = (id: number): ActionDeletePost => {
+    return {
+        type: DELETE_POST,
+        id
+    }
+}
+export const editPost = (post: PostType): ActionEditPost => {
+    return {
+        type: EDIT_POST,
+        id: post.id,
+        post
+    }
+}
+export const newComment = (postId: number, text: string): ActionNewComment => {
+    return {
+        type: NEW_COMMENT,
+        postId,
+        text
+    }
+}
+export const deleteComment = (postId: number, id: number): ActionDeleteComment => {
+    return {
+        type: DELETE_COMMENT,
+        id,
+        postId
+
+    }
+}
+export const editComment = (postId: number, id: number, text: string): ActionEditComment => {
+    return {
+        type: EDIT_COMMENT,
+        id,
+        postId,
+        text
+    }
+}
 
