@@ -1,26 +1,50 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import {Redirect, Route} from 'react-router-dom';
+import PostsList from "./components/PostsList";
+import {connect, ConnectedProps} from "react-redux";
+import {AppStateType} from "./store/store";
+import {loadPosts} from "./store/reducer";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const mapStateToProps = (state: AppStateType) => ({
+        ...state
+    }
+);
+
+const mapDispatchToProps = (dispatch: any) => {
+    return {
+        load: () => {
+            dispatch(loadPosts());
+        }
+    };
 }
 
-export default App;
+function App(props: AppProps) {
+    if (props.loaded === null) {
+        props.load();
+        return <p>Загрузка</p>
+    }
+
+    return (
+        <div className="App">
+            <Route exact path="/posts/" render={() => (
+                <PostsList {...props}/>
+            )}/>
+
+            <Route path="/posts/:id?" render={() => (
+                <></>
+            )}/>
+
+            <Route exact path="/" render={() =>
+                <Redirect to={"/posts/"}/>
+            }/>
+        </div>
+    );
+}
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type AppProps = ConnectedProps<typeof connector>;
+
+export default connector(App);
+
