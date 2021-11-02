@@ -1,5 +1,5 @@
-import {requestAuth, requestLogin, requestLogout, requestRegister} from "../../API/AuthAPI";
 import {CommentType, PostType} from "./types";
+import {requestLoad} from "./API";
 
 const LOAD_DATA = "LOAD_DATA"
 
@@ -153,17 +153,27 @@ function editComment(comments: Array<CommentType>, postId: number, id: number, t
 }
 
 
-const setPosts = (data: { posts: Array<PostType>, comments: Array<CommentType> }): ActionLoadData => {
+const setPosts = (posts: Array<PostType>, comments: Array<CommentType>): ActionLoadData => {
     return {
         type: LOAD_DATA,
-        ...data
+        posts,
+        comments
     }
 };
 
 export const loadPosts = () => (
     async (dispatch: any) => {
         const data = await requestLoad();
-        dispatch(setPosts(data));
+        let posts: Array<PostType> = []
+        let comments: Array<CommentType> = []
+        data.forEach((item) => {
+            posts.push({body: item.body, id: item.id, title: item.title})
+            item.comments.forEach((comment) => {
+                console.log(item)
+                comments.push({id: comment.id, postId: item.id, text: comment.text})
+            })
+        })
+        dispatch(setPosts(posts, comments));
     }
 )
 

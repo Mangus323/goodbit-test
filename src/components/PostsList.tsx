@@ -8,7 +8,10 @@ type PropsType = {
 }
 
 const PostsList = (props: PropsType) => {
-    let postsList = props.posts.map(item => <Post {...item} />)
+
+    let postsList = props.posts.map((item, index) => (
+        <Post {...item} key={index}
+              comments={findComments(props.comments, item.id)}/>))
 
     return (
         <div>
@@ -16,7 +19,16 @@ const PostsList = (props: PropsType) => {
         </div>
     )
 
-
 };
+
+const findComments = (comments: Array<CommentType>, id: number): Array<CommentType> => {
+    let array: Array<CommentType> = []
+    //console.log(comments)
+    comments.forEach(comment => {
+        if (comment.id === id) array.push(comment)
+    })
+    return array
+}
+
 
 export default PostsList;

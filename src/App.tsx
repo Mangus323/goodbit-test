@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import {Redirect, Route} from 'react-router-dom';
 import PostsList from "./components/PostsList";

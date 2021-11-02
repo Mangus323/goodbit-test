@@ -6,7 +6,7 @@
       "body": "1 body",
       "comments": [
         {
-          "postId": 0,
+          "id": 0,
           "text": "1 comment"
         }
       ]
@@ -17,7 +17,7 @@
       "body": "2 body",
       "comments": [
         {
-          "postId": 0,
+          "id": 0,
           "text": "1 comment"
         }
       ]
@@ -34,11 +34,11 @@
       "body": "4 body",
       "comments": [
         {
-          "postId": 0,
+          "id": 0,
           "text": "1 comment"
         },
         {
-          "postId": 1,
+          "id": 1,
           "text": "2 comment"
         }
       ]
@@ -49,7 +49,7 @@
       "body": "5 body",
       "comments": [
         {
-          "postId": 0,
+          "id": 0,
           "text": "1 comment"
         }
       ]
@@ -60,7 +60,7 @@
       "body": "6 body",
       "comments": [
         {
-          "postId": 0,
+          "id": 0,
           "text": "1 comment"
         }
       ]

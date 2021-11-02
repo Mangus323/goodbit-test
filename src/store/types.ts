@@ -8,3 +8,6 @@ export type CommentType = {
     postId: number,
     text: string,
 }
+export type RequestDataType = PostType & {
+    comments: Array<{ id: number, text: string }>
+}
