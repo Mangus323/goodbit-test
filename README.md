@@ -1,6 +1,4 @@
-# Getting Started with Create React App
-
-Тестовый проект для Goodbit
+# Тестовый проект для Goodbit
 
 ## Available Scripts
 
